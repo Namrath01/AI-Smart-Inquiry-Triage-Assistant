@@ -97,7 +97,7 @@ confidence, or escalation; it only acts on the finalized result fields.
 |---|---|---|
 | Classification | Taxonomy-constrained structured output | Constrains normal classification output to the canonical taxonomy, with deterministic fallback for malformed model output; `taxonomy.json` is the single source of truth, never duplicated in code. |
 | Priority | Majority vote over the retrieved Top-K | A similarity-weighted alternative was implemented and evaluated — it produced **0/300 disagreements** against majority vote under leakage-safe cross-validation, so the simpler method was retained. |
-| Routing | Deterministic category → queue lookup | The historical data has a strict one-to-one category → queue mapping, verified at runtime — a data lookup, not a judgment call. |
+| Routing | Deterministic category → queue lookup | Runtime validation ensures each category maps to exactly one queue. In the supplied dataset, all eight categories also have distinct queues — a data lookup, not a judgment call. |
 | Confidence | Unweighted mean of 3 evidence signals (`evidence_mean`) | Selected over a raw-retrieval-strength baseline by evaluation; still explicitly not a calibrated probability. |
 | n8n integration | Kept outside the LangGraph graph entirely | Downstream operational automation, not an AI reasoning step — the workflow can be edited without touching `src/main.py`, and vice versa. |
 
@@ -131,8 +131,8 @@ Not every step needs a model call — this pipeline only asks the LLM to do what
 interpreting free text (classification, resolution-note drafting). Two decisions are deliberately
 deterministic instead:
 
-- **Routing** — `data/past_cases.csv` was inspected and confirmed to have a strict one-to-one
-  mapping from category to `routed_queue`, re-validated at runtime every time the map is built.
+- **Routing** — `data/past_cases.csv` has eight categories with distinct queues. Runtime
+  validation ensures each category maps to exactly one `routed_queue` every time the map is built.
   Asking an LLM to route would add uncertainty to a decision the data already answers exactly.
 - **Priority tie-breaking** — once evidence is gathered from the Top-K neighbors, resolving a tie
   follows a fixed, documented rule (highest summed similarity, then severity order
@@ -197,9 +197,10 @@ callable and tested.
 
 ## Routing
 
-This category → queue mapping is **derived from the CSV at runtime** (not hand-coded) and
-validated to still be a strict 1:1 mapping every time it's built — if a future data change ever
-broke that invariant, this validation would fail loudly rather than routing silently incorrectly.
+This category → queue mapping is **derived from the CSV at runtime** (not hand-coded).
+Runtime validation ensures each category maps to exactly one queue. In the supplied dataset,
+all eight categories also have distinct queues. If a future data change maps one category to
+multiple queues, validation fails loudly rather than routing silently incorrectly.
 See [What Was Deliberately Not Delegated to an LLM](#what-was-deliberately-not-delegated-to-an-llm)
 for why this is a lookup rather than a model call.
 
@@ -283,6 +284,9 @@ queue are **all three** correct:
 | 0.70 | 30.7% | 50.0% |
 | 0.80 | 21.0% | 50.8% |
 
+The cross-validation results informed configuration selection and describe development performance;
+no separate untouched final test set was used.
+
 **Honest read of these numbers:** classification is reasonably strong for a 1.5B local model on
 this taxonomy (80.33%, with billing and other at 100%). **Priority inference from Top-K neighbors
 is the clear bottleneck** — accuracy sits around 55%, and the `medium` class in particular is
@@ -340,9 +344,9 @@ the result only after classification, retrieval, priority, routing, resolution n
 have all already been decided by the LangGraph pipeline.
 
 - **Optional and off by default. Not required to run the core triage system.** Set the
-  `TRIAGE_N8N_WEBHOOK_URL` environment variable to enable it; leave it unset and
-  `src/notifications.py` is a no-op. The integration is fully implemented and can be demonstrated
-  end to end once a webhook URL is configured.
+  `TRIAGE_N8N_WEBHOOK_URL` environment variable to enable forwarding from the application; leave
+  it unset and `src/notifications.py` is a no-op. End-to-end Gmail notifications additionally
+  require the workflow and credentials/recipients described in `n8n/README.md`.
 - **Cannot affect triage.** A webhook failure, timeout, or unreachable n8n instance is caught and
   logged in `src/notifications.py` — these delivery failures do not alter or fail the completed
   triage result, and no retry is attempted.
