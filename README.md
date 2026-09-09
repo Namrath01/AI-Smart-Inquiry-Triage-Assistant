@@ -1,5 +1,8 @@
 # AI-powered Smart Inquiry Triage Assistant
 
+> Use AI where interpretation is required, deterministic logic where the data already gives an
+> exact answer, and escalate when the available evidence is weak.
+
 ## Business Problem
 
 A large automotive company receives hundreds of customer inquiries a day across its digital
@@ -10,41 +13,93 @@ doesn't scale with volume.
 
 This prototype automates that first triage step: given a raw customer inquiry, it classifies it
 into a canonical category, infers a priority, routes it to the right team's queue, and drafts a
-short resolution note grounded in similar historical cases. When the system isn't confident in
-its own classification, it escalates the case to a human reviewer instead of guessing.
+short resolution note grounded in similar historical cases. When the available triage evidence is
+insufficient, the case is escalated to a human reviewer instead of being auto-triaged.
 
-## Solution Overview
+## What the System Does
 
-```
-Inquiry
-  → taxonomy-constrained classification
-  → Top-K historical retrieval
-  → priority inference (from the retrieved Top-K)
-  → deterministic routing
-  → grounded resolution note
-  → evidence-based confidence + escalation
-```
+- **Taxonomy-constrained classification** — the inquiry is classified into one of 8 canonical
+  categories, never a free-form label.
+- **Top-K historical retrieval** — the most similar past cases are pulled from a local vector
+  store, configurable in the UI.
+- **Priority derived from retrieved cases** — never guessed directly by the model.
+- **Deterministic routing** — category → queue is a data lookup, not a model decision.
+- **Grounding-constrained resolution notes** — retrieved cases inform the draft, but the prompt
+  explicitly prohibits transferring case-specific facts from them onto the current inquiry.
+- **Evidence-based confidence and escalation** — a composite score decides whether a result is
+  auto-triaged or sent for human review.
+- **Optional downstream n8n notifications** — the finalized result can also be forwarded to an
+  operational workflow, entirely outside the reasoning pipeline.
 
 The pipeline is implemented as a **LangGraph** workflow (`src/main.py`) backed by a local Ollama
 chat model, a local embedding model, and a Chroma vector store over 300 historical cases
 (`data/past_cases.csv`). The Streamlit app (`app/app.py`) is a thin UI over the single public
 entrypoint `src.main.triage_inquiry(query, top_k, confidence_threshold)`.
 
+## What Makes This Design Different
+
+- **Not every decision is delegated to an LLM** — routing stays deterministic when the data already defines the answer.
+- **Historical evidence influences the decision** — retrieved cases drive priority and confidence, not just the resolution note.
+- **Uncertainty is surfaced, not hidden** — weak evidence triggers human review instead of forcing an automated answer.
+
+## Prototype Results
+
+| Metric | Result |
+|---|---|
+| Category accuracy | 80.33% |
+| Routing accuracy | 80.33% |
+| Priority accuracy (K=5) | 55.67% |
+| Default confidence threshold | 0.50 |
+| Coverage at threshold 0.50 | 59.7% |
+| Full-triage reliability at 0.50 | 51.4% |
+
+**Priority inference is the main bottleneck** — not classification, not routing. Full methodology,
+per-category/per-priority breakdowns, and confusion matrices are in the [Evaluation](#evaluation)
+section below and in `evaluation/results.json` / `evaluation/predictions.csv`.
+
 ## Architecture
 
 ```mermaid
 flowchart TD
-    START([START]) --> Classify
-    Classify --> Retrieve["Retrieve Top-K"]
-    Retrieve --> Priority["Determine Priority"]
-    Priority --> Route
-    Route --> Resolution["Generate Resolution"]
-    Resolution --> Finalize["Finalize Confidence / Escalation"]
-    Finalize --> END([END])
+    IN([Customer Inquiry]) --> UI[Streamlit UI]
+    UI --> LGSTART
+
+    subgraph LangGraph["LangGraph — AI reasoning (src/main.py)"]
+        LGSTART([START]) --> C[Classify]
+        C --> R["Retrieve Top-K"]
+        R --> P["Determine Priority"]
+        P --> RT[Route]
+        RT --> RES["Generate Resolution"]
+        RES --> FIN["Finalize Confidence / Escalation"]
+    end
+
+    FIN --> OUT(["Final Structured Result"])
+    OUT --> DISPLAY["Streamlit result display"]
+    OUT -. optional .-> WEBHOOK
+
+    subgraph N8N["n8n — optional downstream automation (outside AI reasoning)"]
+        WEBHOOK[Webhook] --> ESC{Escalated?}
+        ESC -->|yes| E1[Escalation notification]
+        ESC -->|no| PRI{"Priority = high?"}
+        PRI -->|yes| E2[High-priority notification]
+        PRI -->|no| E3[No action]
+    end
 ```
 
-Each box is a distinct LangGraph node operating on one shared, typed state object
-(`TriageState`) — no hidden steps, no single giant function doing everything.
+Each LangGraph box is a distinct node operating on one shared, typed state object
+(`TriageState`) — no hidden steps, no single giant function doing everything. n8n sits outside
+that subgraph entirely: it does not determine classification, retrieval, priority, routing,
+confidence, or escalation; it only acts on the finalized result fields.
+
+## Design Choices That Matter
+
+| Choice | Decision | Why |
+|---|---|---|
+| Classification | Taxonomy-constrained structured output | Constrains normal classification output to the canonical taxonomy, with deterministic fallback for malformed model output; `taxonomy.json` is the single source of truth, never duplicated in code. |
+| Priority | Majority vote over the retrieved Top-K | A similarity-weighted alternative was implemented and evaluated — it produced **0/300 disagreements** against majority vote under leakage-safe cross-validation, so the simpler method was retained. |
+| Routing | Deterministic category → queue lookup | The historical data has a strict one-to-one category → queue mapping, verified at runtime — a data lookup, not a judgment call. |
+| Confidence | Unweighted mean of 3 evidence signals (`evidence_mean`) | Selected over a raw-retrieval-strength baseline by evaluation; still explicitly not a calibrated probability. |
+| n8n integration | Kept outside the LangGraph graph entirely | Downstream operational automation, not an AI reasoning step — the workflow can be edited without touching `src/main.py`, and vice versa. |
 
 ## Why LangGraph?
 
@@ -59,21 +114,32 @@ retrieval return, before confidence is finalized). LangGraph fits that shape dir
 - **Inspectable intermediate decisions** — classification source, retrieval evidence, and the
   three confidence signals are all visible on the graph's final state (not exposed in the public
   UI contract, but available for tests, evaluation, and debugging).
-- **Deterministic + model-driven steps side by side** — routing uses a deterministic data-derived lookup;
-  retrieval calls the embedding model and vector store, while classification and resolution-note
-  generation call the chat model. The graph doesn't care which is which.
 - **A clear extension point** — confidence/escalation finalization was added as one more node
   after the five required stages, without touching anything upstream.
 
 This is not a claim that LangGraph is necessary for every classifier — a single well-tested
-function would do for a one-step task. LangGraph makes the ordered multi-stage workflow and
-shared state explicit, while node-local retry/fallback logic and final escalation remain
-independently testable. The production graph itself is linear (`classify → retrieve →
-determine_priority → route → generate_resolution → finalize_confidence_and_escalation`, one edge
-after another) — retry/fallback is control flow *inside* the classification node, not a
-conditional LangGraph edge, and escalation is a decision computed in the final node, not a graph
-branch. No conditional edges were added just to make this section sound more sophisticated than
-the implementation actually is.
+function would do for a one-step task. The production graph itself is linear (`classify →
+retrieve → determine_priority → route → generate_resolution →
+finalize_confidence_and_escalation`, one edge after another) — retry/fallback is control flow
+*inside* the classification node, not a conditional LangGraph edge, and escalation is a decision
+computed in the final node, not a graph branch. No conditional edges were added just to make this
+section sound more sophisticated than the implementation actually is.
+
+## What Was Deliberately Not Delegated to an LLM
+
+Not every step needs a model call — this pipeline only asks the LLM to do what genuinely requires
+interpreting free text (classification, resolution-note drafting). Two decisions are deliberately
+deterministic instead:
+
+- **Routing** — `data/past_cases.csv` was inspected and confirmed to have a strict one-to-one
+  mapping from category to `routed_queue`, re-validated at runtime every time the map is built.
+  Asking an LLM to route would add uncertainty to a decision the data already answers exactly.
+- **Priority tie-breaking** — once evidence is gathered from the Top-K neighbors, resolving a tie
+  follows a fixed, documented rule (highest summed similarity, then severity order
+  `high > medium > low`) rather than a model call.
+
+This isn't a claim that AI is unnecessary in general — it's that this specific pipeline reserves
+the model for stages where language interpretation or generation adds value.
 
 ## Models
 
@@ -118,25 +184,24 @@ genuinely malformed or unparseable model output, not because it was a frequent o
 ## Priority
 
 Priority is derived from the retrieved Top-K historical neighbors, as required — never guessed
-directly by the LLM. Two methods were implemented and compared:
+directly by the LLM. Two methods were implemented:
 
-- **Majority vote** (baseline) — the priority most common among the Top-K neighbors.
+- **Majority vote** (baseline, in production) — the priority most common among the Top-K
+  neighbors, with a documented tie-break (highest summed similarity, then severity order).
 - **Similarity-weighted vote** (candidate) — each neighbor's priority is weighted by its
   similarity score before voting.
 
-The leakage-safe evaluation (below) found the two methods produced **the exact same prediction on
-all 300 held-out cases** — zero disagreements. With no measurable difference, the simpler
-majority-vote method was retained rather than switching to the more complex weighted variant for
-no benefit.
+Why majority vote is used in production is covered in
+[Design Choices That Matter](#design-choices-that-matter) above; both methods remain independently
+callable and tested.
 
 ## Routing
 
-`data/past_cases.csv` was inspected and validated: every one of the 8 categories maps to exactly
-one `routed_queue`, with no exceptions. This category → queue mapping is **derived from the CSV
-at runtime** (not hand-coded) and validated to still be a strict 1:1 mapping every time it's
-built. Because the relationship is genuinely deterministic in the data, routing uses a direct
-lookup rather than an LLM call — avoiding introducing model uncertainty into a decision the data
-already answers exactly.
+This category → queue mapping is **derived from the CSV at runtime** (not hand-coded) and
+validated to still be a strict 1:1 mapping every time it's built — if a future data change ever
+broke that invariant, this validation would fail loudly rather than routing silently incorrectly.
+See [What Was Deliberately Not Delegated to an LLM](#what-was-deliberately-not-delegated-to-an-llm)
+for why this is a lookup rather than a model call.
 
 ## Confidence and Human Escalation
 
@@ -266,9 +331,6 @@ confusion matrices are in `evaluation/results.json` and `evaluation/predictions.
 4. Build a persistent human-review feedback loop so escalated/corrected cases feed back into
    future evaluation and (eventually) retraining.
 
-A small, optional step toward the "downstream integration" item above is already implemented —
-see below.
-
 ## Optional Downstream Notifications (n8n)
 
 After rendering a newly generated **successful** triage result, the application optionally makes
@@ -277,8 +339,10 @@ with their names and values unchanged to n8n. n8n does not participate in AI rea
 the result only after classification, retrieval, priority, routing, resolution notes, and confidence/escalation
 have all already been decided by the LangGraph pipeline.
 
-- **Optional and off by default.** Set the `TRIAGE_N8N_WEBHOOK_URL` environment variable to enable
-  it; leave it unset and `src/notifications.py` is a no-op. The main demo runs with it disabled.
+- **Optional and off by default. Not required to run the core triage system.** Set the
+  `TRIAGE_N8N_WEBHOOK_URL` environment variable to enable it; leave it unset and
+  `src/notifications.py` is a no-op. The integration is fully implemented and can be demonstrated
+  end to end once a webhook URL is configured.
 - **Cannot affect triage.** A webhook failure, timeout, or unreachable n8n instance is caught and
   logged in `src/notifications.py` — these delivery failures do not alter or fail the completed
   triage result, and no retry is attempted.
