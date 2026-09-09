@@ -1,0 +1,301 @@
+case_id,inquiry_text,category,priority,routed_queue
+CASE-0001,Can I track my order without logging into the dealer portal?,ordering,low,Order Management Team
+CASE-0002,The automatic emergency braking activated with nothing ahead.,technical,high,Technical Support Team
+CASE-0003,The brake fluid warning appeared and the pedal feels soft.,service,high,Service Scheduling Team
+CASE-0004,Can I get notified when a new trim becomes available in the configurator?,configurator,low,Digital Product / Configurator Support
+CASE-0005,The engine stalls at every red light since the last tune-up.,service,high,Service Scheduling Team
+CASE-0006,What are your customer service hours on weekends?,general,low,Customer Care Team
+CASE-0007,The dealer wants payment upfront for what should be a warranty job.,warranty,high,Warranty Claims Team
+CASE-0008,I ordered two months ago and can't reach anyone for an update.,ordering,medium,Order Management Team
+CASE-0009,Can I get an estimate for replacing the timing belt on my model?,service,medium,Service Scheduling Team
+CASE-0010,The USB ports stopped charging my devices.,technical,low,Technical Support Team
+CASE-0011,My battery died overnight and I can't start the car for work tomorrow.,service,high,Service Scheduling Team
+CASE-0012,I want information about your internship and graduate programs.,other,low,General Correspondence / Triage Queue
+CASE-0013,How long after ordering will I receive my VIN assignment?,ordering,low,Order Management Team
+CASE-0014,My phone won't pair via wireless CarPlay after the update.,technical,medium,Technical Support Team
+CASE-0015,A software update bricked my infotainment system and it won't boot.,technical,high,Technical Support Team
+CASE-0016,How can my dealership network apply to co-host a launch event?,other,low,General Correspondence / Triage Queue
+CASE-0017,I represent a charity seeking a vehicle donation for an auction.,other,low,General Correspondence / Triage Queue
+CASE-0018,Can you check a slow tire leak that keeps losing pressure?,service,medium,Service Scheduling Team
+CASE-0019,"My refund went to a closed card, how do I redirect it?",billing,medium,Billing & Payments Team
+CASE-0020,The dealer says my issue isn't covered but I believe it should be.,warranty,high,Warranty Claims Team
+CASE-0021,The 360 camera view is distorted and warped.,technical,medium,Technical Support Team
+CASE-0022,Can I book an oil change for my sedan sometime next week?,service,low,Service Scheduling Team
+CASE-0023,My adaptive cruise control disengages randomly on the highway.,technical,high,Technical Support Team
+CASE-0024,How do I update the email address on my account?,general,low,Customer Care Team
+CASE-0025,The refund amount is less than what I was originally charged.,billing,medium,Billing & Payments Team
+CASE-0026,There's a subscription charge on my statement I never signed up for.,billing,medium,Billing & Payments Team
+CASE-0027,My vehicle failed to download the safety-critical recall update.,technical,high,Technical Support Team
+CASE-0028,My Bluetooth keeps disconnecting from the car every few minutes.,technical,medium,Technical Support Team
+CASE-0029,Is there a way to configure and reserve directly from the tool?,configurator,low,Digital Product / Configurator Support
+CASE-0030,The tire rotation I paid for last visit doesn't seem to have been done.,service,medium,Service Scheduling Team
+CASE-0031,I'd like to discuss a potential business partnership opportunity.,other,low,General Correspondence / Triage Queue
+CASE-0032,Can I split my deposit across two payment methods?,ordering,low,Order Management Team
+CASE-0033,My infotainment unit failed — is it a warranty repair?,warranty,medium,Warranty Claims Team
+CASE-0034,My service advisor never returned my two voicemails this week.,service,medium,Service Scheduling Team
+CASE-0035,The rear seat entertainment screens no longer power on.,technical,low,Technical Support Team
+CASE-0036,Is a leaking water pump covered under my current warranty?,warranty,medium,Warranty Claims Team
+CASE-0037,I'd like to unsubscribe from your marketing newsletter.,general,low,Customer Care Team
+CASE-0038,The delivery was scheduled but no one contacted me to arrange pickup.,ordering,medium,Order Management Team
+CASE-0039,I want to upgrade from cloth to leather after ordering.,ordering,low,Order Management Team
+CASE-0040,Please schedule a diagnostic for an intermittent electrical fault.,service,medium,Service Scheduling Team
+CASE-0041,Can you send me a brochure for your latest SUV lineup?,general,low,Customer Care Team
+CASE-0042,My charging port latch is stuck and won't release the cable.,technical,high,Technical Support Team
+CASE-0043,Can someone confirm my account was successfully verified?,general,low,Customer Care Team
+CASE-0044,Images in the color preview load extremely slowly on mobile.,configurator,low,Digital Product / Configurator Support
+CASE-0045,I keep getting duplicate emails from your newsletter.,general,low,Customer Care Team
+CASE-0046,Can you confirm the estimated delivery window for order number 88213?,ordering,low,Order Management Team
+CASE-0047,Can you confirm you received my recent feedback form?,general,low,Customer Care Team
+CASE-0048,Why does my financing balance seem higher than expected?,billing,medium,Billing & Payments Team
+CASE-0049,My EV's battery range dropped sharply after the last OTA update.,technical,high,Technical Support Team
+CASE-0050,The online configurator crashes every time I try to add the panorama roof.,configurator,medium,Digital Product / Configurator Support
+CASE-0051,My check engine light came on this morning and the car is shaking badly.,service,high,Service Scheduling Team
+CASE-0052,How do I merge two accounts I accidentally created?,general,medium,Customer Care Team
+CASE-0053,How much does a cabin air filter replacement cost at your location?,service,low,Service Scheduling Team
+CASE-0054,The ambient lighting flickers and changes color on its own.,technical,low,Technical Support Team
+CASE-0055,How do I add a roof rack accessory to my confirmed order?,ordering,low,Order Management Team
+CASE-0056,I was double-charged for my extended warranty payment.,billing,high,Billing & Payments Team
+CASE-0057,My statement shows the wrong billing address.,billing,low,Billing & Payments Team
+CASE-0058,My order confirmation email has the wrong trim listed.,ordering,medium,Order Management Team
+CASE-0059,Can you connect me with your investor relations department?,other,low,General Correspondence / Triage Queue
+CASE-0060,Is corrosion damage included in my warranty coverage?,warranty,low,Warranty Claims Team
+CASE-0061,My battery drains overnight even when the car is off.,technical,high,Technical Support Team
+CASE-0062,The seat memory settings reset every time I turn off the car.,technical,low,Technical Support Team
+CASE-0063,My vehicle failed emissions and I need it fixed to renew registration.,service,medium,Service Scheduling Team
+CASE-0064,What's the best phone number to reach a live representative?,general,low,Customer Care Team
+CASE-0065,My car won't recognize the second programmed key.,technical,medium,Technical Support Team
+CASE-0066,The voice assistant no longer responds to any commands.,technical,low,Technical Support Team
+CASE-0067,My car's Wi-Fi hotspot won't connect any devices.,technical,low,Technical Support Team
+CASE-0068,Can I set up a monthly payment plan for my outstanding balance?,billing,low,Billing & Payments Team
+CASE-0069,Does the configurator show the invoice amount including destination fees?,configurator,low,Digital Product / Configurator Support
+CASE-0070,The navigation system shows the wrong location constantly.,technical,medium,Technical Support Team
+CASE-0071,My sunroof is stuck open and rain is expected tonight.,service,high,Service Scheduling Team
+CASE-0072,My auto-payment failed but I have sufficient funds in my account.,billing,medium,Billing & Payments Team
+CASE-0073,Can you point me to your privacy policy document?,general,low,Customer Care Team
+CASE-0074,I'd like to update my mailing address on file.,general,low,Customer Care Team
+CASE-0075,The heads-up display is misaligned and blurry.,technical,medium,Technical Support Team
+CASE-0076,Can I reschedule my Thursday maintenance appointment to the following Monday?,service,low,Service Scheduling Team
+CASE-0077,I paid off my lease but I'm still being billed monthly.,billing,high,Billing & Payments Team
+CASE-0078,My deposit was taken twice for the same order.,ordering,high,Order Management Team
+CASE-0079,What are the holiday hours for your support line?,general,low,Customer Care Team
+CASE-0080,The subscription charge went up without any notice.,billing,medium,Billing & Payments Team
+CASE-0081,Can I get a physical copy of the owner's manual mailed to me?,general,low,Customer Care Team
+CASE-0082,The invoice lists a service I never received.,billing,medium,Billing & Payments Team
+CASE-0083,Can I get a breakdown of taxes and fees on my purchase?,billing,low,Billing & Payments Team
+CASE-0084,My climate control app command never reaches the car.,technical,low,Technical Support Team
+CASE-0085,My auto-pay was cancelled without my authorization.,billing,medium,Billing & Payments Team
+CASE-0086,The mobile app can't connect to my vehicle anymore.,technical,medium,Technical Support Team
+CASE-0087,Do I need an appointment for a quick windshield wiper replacement?,service,low,Service Scheduling Team
+CASE-0088,I'm writing a research paper and need corporate sustainability data.,other,low,General Correspondence / Triage Queue
+CASE-0089,Can you provide details about your motorsport sponsorship program?,other,low,General Correspondence / Triage Queue
+CASE-0090,The wheel options don't render properly on my browser.,configurator,low,Digital Product / Configurator Support
+CASE-0091,Does my warranty cover the diagnostic fee for a suspected defect?,warranty,low,Warranty Claims Team
+CASE-0092,What's your policy on booking a factory test drive?,general,low,Customer Care Team
+CASE-0093,A parking sensor is throwing false alarms all the time.,technical,medium,Technical Support Team
+CASE-0094,The summary page doesn't match the options I actually selected.,configurator,medium,Digital Product / Configurator Support
+CASE-0095,I'd like to add a brake inspection to my already booked appointment.,service,low,Service Scheduling Team
+CASE-0096,How do I update the credit card used for my lease payments?,billing,low,Billing & Payments Team
+CASE-0097,My promised delivery date passed and I still have no vehicle or update.,ordering,high,Order Management Team
+CASE-0098,The app shows my car as offline even though it's parked at home.,technical,low,Technical Support Team
+CASE-0099,My exported PDF shows the wrong exterior color.,configurator,medium,Digital Product / Configurator Support
+CASE-0100,The payment portal keeps rejecting my valid card.,billing,medium,Billing & Payments Team
+CASE-0101,I'd like to change the delivery address on my existing order.,ordering,low,Order Management Team
+CASE-0102,How do I install the latest software update on my vehicle?,technical,low,Technical Support Team
+CASE-0103,The OTA update has been stuck at 40 percent for two days.,technical,medium,Technical Support Team
+CASE-0104,I never received confirmation that my warranty claim was filed.,warranty,medium,Warranty Claims Team
+CASE-0105,Can the configurator show monthly lease estimates as well?,configurator,low,Digital Product / Configurator Support
+CASE-0106,Can I get a receipt for the deposit I paid last week?,billing,low,Billing & Payments Team
+CASE-0107,Can I get a written breakdown of the labor charges on my invoice?,service,medium,Service Scheduling Team
+CASE-0108,The wait time in the service lounge was over three hours with no updates.,service,medium,Service Scheduling Team
+CASE-0109,The configurator shows an option as available but adding it throws an error.,configurator,medium,Digital Product / Configurator Support
+CASE-0110,The color preview looks completely different from the brochure images.,configurator,low,Digital Product / Configurator Support
+CASE-0111,Why does the configurator require login just to view pricing?,configurator,low,Digital Product / Configurator Support
+CASE-0112,My delivery driver never showed up on the scheduled date.,ordering,high,Order Management Team
+CASE-0113,My remote start feature stopped working through the app.,technical,low,Technical Support Team
+CASE-0114,Can you confirm my warranty end date and mileage limit?,warranty,low,Warranty Claims Team
+CASE-0115,I was charged a late fee even though I paid on time.,billing,high,Billing & Payments Team
+CASE-0116,I'm a journalist requesting press credentials for your upcoming launch event.,other,low,General Correspondence / Triage Queue
+CASE-0117,Is a cracked touchscreen covered under manufacturer warranty?,warranty,low,Warranty Claims Team
+CASE-0118,I need to modify the financing terms tied to my order.,ordering,medium,Order Management Team
+CASE-0119,The lane-keep assist warning beeps constantly for no reason.,technical,medium,Technical Support Team
+CASE-0120,How do I change my communication preferences?,general,low,Customer Care Team
+CASE-0121,The wrong options are showing on my order summary.,ordering,medium,Order Management Team
+CASE-0122,The service center returned my car with a warning light still on.,service,medium,Service Scheduling Team
+CASE-0123,Please confirm whether my order qualifies for the current incentive.,ordering,low,Order Management Team
+CASE-0124,The tax estimate in the configurator seems wrong for my state.,configurator,low,Digital Product / Configurator Support
+CASE-0125,Our company is interested in a sponsorship partnership with your brand.,other,low,General Correspondence / Triage Queue
+CASE-0126,My car was scratched while it was in your service bay.,service,high,Service Scheduling Team
+CASE-0127,How long does a standard brake pad replacement usually take at your center?,service,low,Service Scheduling Team
+CASE-0128,The financing calculator step in the configurator is frozen.,configurator,medium,Digital Product / Configurator Support
+CASE-0129,The trim comparison table has overlapping text on my screen.,configurator,low,Digital Product / Configurator Support
+CASE-0130,"My engine failed at 45,000 miles and I want a warranty review.",warranty,high,Warranty Claims Team
+CASE-0131,The dashboard lights up with multiple errors after a cold start.,technical,high,Technical Support Team
+CASE-0132,"I need a loaner car while my vehicle is in for a major repair, is that available?",service,medium,Service Scheduling Team
+CASE-0133,Our influencer agency proposes a collaboration campaign.,other,low,General Correspondence / Triage Queue
+CASE-0134,Can I add a tow package to the sport trim in the configurator?,configurator,low,Digital Product / Configurator Support
+CASE-0135,I want to leave feedback about my excellent dealership experience.,general,low,Customer Care Team
+CASE-0136,The temperature readout on the display is stuck at one value.,technical,low,Technical Support Team
+CASE-0137,My infotainment audio cuts out on every phone call.,technical,medium,Technical Support Team
+CASE-0138,My order tracking page hasn't moved from 'in production' for a month.,ordering,medium,Order Management Team
+CASE-0139,My warranty claim was rejected and I want to escalate the decision.,warranty,high,Warranty Claims Team
+CASE-0140,My gearbox is slipping between second and third gear.,service,high,Service Scheduling Team
+CASE-0141,How do I join your customer loyalty program?,general,low,Customer Care Team
+CASE-0142,The price update lags several seconds behind each selection.,configurator,low,Digital Product / Configurator Support
+CASE-0143,The repair took longer than promised and I missed two days of work.,service,medium,Service Scheduling Team
+CASE-0144,Can you rush the paperwork so I can pick up this weekend?,ordering,medium,Order Management Team
+CASE-0145,Can I wait onsite while you do a standard oil change?,service,low,Service Scheduling Team
+CASE-0146,The order tracker says delivered but I never received the car.,ordering,high,Order Management Team
+CASE-0147,The gesture controls no longer respond in my model.,technical,low,Technical Support Team
+CASE-0148,My brakes are grinding loudly and I need the earliest possible service appointment.,service,high,Service Scheduling Team
+CASE-0149,My steering wheel controls stopped responding after the update.,technical,medium,Technical Support Team
+CASE-0150,I cancelled auto-pay but a payment was still taken.,billing,high,Billing & Payments Team
+CASE-0151,I'd like to book a factory tour for a group of engineering students.,other,low,General Correspondence / Triage Queue
+CASE-0152,I want to configure a plug-in hybrid but the option is greyed out.,configurator,low,Digital Product / Configurator Support
+CASE-0153,My navigation maps are two years out of date — how do I update?,technical,low,Technical Support Team
+CASE-0154,The configurator's financing step asks for info it never uses.,configurator,low,Digital Product / Configurator Support
+CASE-0155,Does my warranty include roadside assistance?,warranty,low,Warranty Claims Team
+CASE-0156,The recall notice I received doesn't list a repair location.,warranty,low,Warranty Claims Team
+CASE-0157,I'd like to book the annual safety inspection required in my state.,service,low,Service Scheduling Team
+CASE-0158,The dealership charged me a diagnostic fee even though nothing was fixed — please explain.,service,medium,Service Scheduling Team
+CASE-0159,My payment posted but the portal still shows a balance due.,billing,medium,Billing & Payments Team
+CASE-0160,My saved build disappeared after I logged back into my account.,configurator,medium,Digital Product / Configurator Support
+CASE-0161,I want to close my online account permanently.,general,medium,Customer Care Team
+CASE-0162,Do you sell branded merchandise like jackets or model cars?,other,low,General Correspondence / Triage Queue
+CASE-0163,How do I change the due date for my monthly payment?,billing,low,Billing & Payments Team
+CASE-0164,I want to opt into SMS notifications for my account.,general,low,Customer Care Team
+CASE-0165,How do I apply my trade-in value to a pending order?,ordering,low,Order Management Team
+CASE-0166,The warranty department hasn't returned my calls in two weeks.,warranty,medium,Warranty Claims Team
+CASE-0167,Can I defer this month's payment due to a financial hardship?,billing,medium,Billing & Payments Team
+CASE-0168,I placed a deposit but never received an order number.,ordering,medium,Order Management Team
+CASE-0169,"I can't log into my customer account, the reset link doesn't work.",general,medium,Customer Care Team
+CASE-0170,I'd like to make a one-time extra payment toward my principal.,billing,low,Billing & Payments Team
+CASE-0171,I need my headlight bulb replaced before my night shift starts.,service,medium,Service Scheduling Team
+CASE-0172,Can you inspect a suspension noise that only happens over bumps?,service,medium,Service Scheduling Team
+CASE-0173,I'm requesting your latest annual shareholder report.,other,low,General Correspondence / Triage Queue
+CASE-0174,Is a wheel alignment included with a new set of tires?,service,low,Service Scheduling Team
+CASE-0175,I need to update my contact number on the order file.,ordering,low,Order Management Team
+CASE-0176,I was overcharged on my last invoice and need a correction.,billing,high,Billing & Payments Team
+CASE-0177,Does the battery on my EV fall under a separate warranty term?,warranty,medium,Warranty Claims Team
+CASE-0178,My key fob stopped working even after replacing the battery.,technical,medium,Technical Support Team
+CASE-0179,I need to cancel my order and get my deposit refunded.,ordering,medium,Order Management Team
+CASE-0180,My engine warning light keeps returning after a warranty fix.,warranty,high,Warranty Claims Team
+CASE-0181,My warranty repair was done but the same problem came back.,warranty,high,Warranty Claims Team
+CASE-0182,"Please expedite my order, I need the vehicle before I relocate next month.",ordering,high,Order Management Team
+CASE-0183,How do I dispute a charge I believe is incorrect?,billing,medium,Billing & Payments Team
+CASE-0184,I want to dispute the rejection of my suspension warranty claim.,warranty,high,Warranty Claims Team
+CASE-0185,The financing amount on my contract doesn't match what I was quoted.,billing,high,Billing & Payments Team
+CASE-0186,I'd like to switch from monthly to annual billing.,billing,low,Billing & Payments Team
+CASE-0187,I'd like to compliment a service advisor who helped me last week.,general,low,Customer Care Team
+CASE-0188,"I smell fuel inside the cabin, is it safe to keep driving?",service,high,Service Scheduling Team
+CASE-0189,Why can't I select leather seats with the base trim?,configurator,low,Digital Product / Configurator Support
+CASE-0190,Requesting a quote for full synthetic oil versus conventional.,service,low,Service Scheduling Team
+CASE-0191,Can I change the delivery from home to dealership pickup?,ordering,low,Order Management Team
+CASE-0192,I need my annual interest statement for tax purposes.,billing,low,Billing & Payments Team
+CASE-0193,Where can I find current job openings at your company?,other,low,General Correspondence / Triage Queue
+CASE-0194,Is my order eligible for the loyalty discount I qualified for?,ordering,low,Order Management Team
+CASE-0195,My extended warranty was charged before the coverage even started.,billing,medium,Billing & Payments Team
+CASE-0196,My claim status page shows an error every time I check.,warranty,low,Warranty Claims Team
+CASE-0197,Please review why my sensor replacement claim was denied.,warranty,medium,Warranty Claims Team
+CASE-0198,How do I sign up for email alerts about new models?,general,low,Customer Care Team
+CASE-0199,My lease payment was withdrawn twice this month.,billing,high,Billing & Payments Team
+CASE-0200,My exhaust is dragging on the ground and rattling loudly.,service,high,Service Scheduling Team
+CASE-0201,Our media outlet wants to schedule an interview with your executives.,other,low,General Correspondence / Triage Queue
+CASE-0202,How do I reset my account password without an email link?,general,medium,Customer Care Team
+CASE-0203,The dealer says my order was cancelled but I never requested that.,ordering,high,Order Management Team
+CASE-0204,How do I change the currency shown in the configurator?,configurator,low,Digital Product / Configurator Support
+CASE-0205,I dropped my car off two days ago and nobody has updated me on the repair status.,service,medium,Service Scheduling Team
+CASE-0206,My dash cam integration stopped saving recordings.,technical,low,Technical Support Team
+CASE-0207,When is the recommended interval for changing the transmission fluid?,service,low,Service Scheduling Team
+CASE-0208,Can I add an extended warranty after purchase?,warranty,low,Warranty Claims Team
+CASE-0209,Is my brake system covered or considered a wear item?,warranty,low,Warranty Claims Team
+CASE-0210,The interior 360 view doesn't rotate on my tablet.,configurator,low,Digital Product / Configurator Support
+CASE-0211,There's an open recall on my vehicle — how do I get it fixed?,warranty,medium,Warranty Claims Team
+CASE-0212,How do I save my current build so I can come back to it later?,configurator,low,Digital Product / Configurator Support
+CASE-0213,Do you have a customer referral program?,general,low,Customer Care Team
+CASE-0214,What documents do I need to bring for a test drive?,general,low,Customer Care Team
+CASE-0215,Can you waive the late fee since it was a bank processing delay?,billing,medium,Billing & Payments Team
+CASE-0216,How accurate is the estimated price versus the final dealer quote?,configurator,low,Digital Product / Configurator Support
+CASE-0217,My headlights won't switch to auto mode anymore.,technical,medium,Technical Support Team
+CASE-0218,My order status flipped back to 'pending' after being confirmed.,ordering,medium,Order Management Team
+CASE-0219,My blind spot monitor light stays on permanently.,technical,medium,Technical Support Team
+CASE-0220,Can I compare two saved configurations side by side?,configurator,low,Digital Product / Configurator Support
+CASE-0221,How long does a typical warranty claim take to be approved?,warranty,low,Warranty Claims Team
+CASE-0222,My refund from a cancelled service still hasn't been processed.,billing,medium,Billing & Payments Team
+CASE-0223,Do you service electric vehicles at this location?,service,low,Service Scheduling Team
+CASE-0224,The digital instrument cluster went completely dark while driving.,technical,high,Technical Support Team
+CASE-0225,Please confirm my final payment cleared and the loan is closed.,billing,low,Billing & Payments Team
+CASE-0226,There's a strange burning smell after my recent service visit.,service,high,Service Scheduling Team
+CASE-0227,There are two identical charges on the same date on my account.,billing,high,Billing & Payments Team
+CASE-0228,How can I give feedback about your mobile app experience?,general,low,Customer Care Team
+CASE-0229,What exactly does my extended warranty include?,warranty,low,Warranty Claims Team
+CASE-0230,The configurator keeps resetting to the default trim on every reload.,configurator,medium,Digital Product / Configurator Support
+CASE-0231,Is my transmission repair covered under the powertrain warranty?,warranty,medium,Warranty Claims Team
+CASE-0232,Can you match a competitor's quote for rear brake replacement?,service,low,Service Scheduling Team
+CASE-0233,What is the current status of my order placed three weeks ago?,ordering,low,Order Management Team
+CASE-0234,Where can I find the VIN for the car I ordered?,ordering,low,Order Management Team
+CASE-0235,The dealer replaced a part I never authorized.,service,high,Service Scheduling Team
+CASE-0236,Can I add a trim upgrade to an order that's already been placed?,ordering,medium,Order Management Team
+CASE-0237,My charging speed is far slower than the advertised rate.,technical,high,Technical Support Team
+CASE-0238,My invoice PDF won't download from the billing portal.,billing,low,Billing & Payments Team
+CASE-0239,The deposit refund I was promised never appeared on my card.,ordering,high,Order Management Team
+CASE-0240,Is there a supplier onboarding process I can learn about?,other,low,General Correspondence / Triage Queue
+CASE-0241,Is expedited shipping available to move up my delivery date?,ordering,medium,Order Management Team
+CASE-0242,Please confirm whether my scheduled recall service is still on for Friday.,service,medium,Service Scheduling Team
+CASE-0243,The tire pressure sensor reads zero on a properly inflated tire.,technical,medium,Technical Support Team
+CASE-0244,Which trim levels include the driver assistance package?,configurator,low,Digital Product / Configurator Support
+CASE-0245,My car's clock resets to the wrong time after every trip.,technical,low,Technical Support Team
+CASE-0246,My appointment confirmation email never arrived after I booked online.,service,low,Service Scheduling Team
+CASE-0247,The PDF export of my build is missing the selected options list.,configurator,medium,Digital Product / Configurator Support
+CASE-0248,The recall repair caused a new issue — is that covered?,warranty,high,Warranty Claims Team
+CASE-0249,"I can't export my configuration as a PDF, the button does nothing.",configurator,medium,Digital Product / Configurator Support
+CASE-0250,Please confirm the total amount financed on my agreement.,billing,low,Billing & Payments Team
+CASE-0251,My coolant is leaking onto the driveway and the engine is overheating.,service,high,Service Scheduling Team
+CASE-0252,I'd like a full multi-point inspection before a road trip next month.,service,low,Service Scheduling Team
+CASE-0253,The warranty claim has been pending for six weeks with no answer.,warranty,medium,Warranty Claims Team
+CASE-0254,My loyalty points balance looks incorrect.,general,low,Customer Care Team
+CASE-0255,There's an unexplained administrative fee on my invoice.,billing,medium,Billing & Payments Team
+CASE-0256,My claim was denied for lack of maintenance records I actually have.,warranty,high,Warranty Claims Team
+CASE-0257,I need a payoff quote for my current financing balance.,billing,low,Billing & Payments Team
+CASE-0258,"What maintenance is due at the 60,000 mile mark for my SUV?",service,low,Service Scheduling Team
+CASE-0259,"My powertrain warranty claim needs manager escalation, please help.",warranty,high,Warranty Claims Team
+CASE-0260,The configurator won't let me deselect an option I added by mistake.,configurator,medium,Digital Product / Configurator Support
+CASE-0261,The wireless charging pad no longer charges my phone.,technical,low,Technical Support Team
+CASE-0262,"I need urgent help, my steering feels loose and unsafe to drive.",service,high,Service Scheduling Team
+CASE-0263,Please explain the late fee that appeared on this month's invoice.,billing,medium,Billing & Payments Team
+CASE-0264,My software update was supposed to be covered but I was charged.,warranty,medium,Warranty Claims Team
+CASE-0265,Can I transfer the remaining warranty to a new owner?,warranty,low,Warranty Claims Team
+CASE-0266,Is there a courtesy shuttle from your service center to downtown?,service,low,Service Scheduling Team
+CASE-0267,Does my warranty cover a faulty air conditioning compressor?,warranty,medium,Warranty Claims Team
+CASE-0268,What corporate social responsibility initiatives does your company run?,other,low,General Correspondence / Triage Queue
+CASE-0269,We'd like to feature your vehicles in an upcoming film production.,other,medium,General Correspondence / Triage Queue
+CASE-0270,How do I file a warranty claim for a failed component?,warranty,low,Warranty Claims Team
+CASE-0271,Can I cancel one vehicle from a two-car order I placed?,ordering,medium,Order Management Team
+CASE-0272,My configuration total jumped unexpectedly after adding one accessory.,configurator,medium,Digital Product / Configurator Support
+CASE-0273,I'd like a brochure comparing your electric models.,general,low,Customer Care Team
+CASE-0274,Can I extend my warranty before it expires next month?,warranty,medium,Warranty Claims Team
+CASE-0275,How do I apply to become an authorized dealer partner?,other,low,General Correspondence / Triage Queue
+CASE-0276,The configurator logged me out and I lost 30 minutes of work.,configurator,medium,Digital Product / Configurator Support
+CASE-0277,"My car is due for its 30,000 mile inspection, how do I schedule it?",service,low,Service Scheduling Team
+CASE-0278,Why is there a financing calculator discrepancy on my paperwork?,billing,medium,Billing & Payments Team
+CASE-0279,The sunroof control on the touchscreen is unresponsive.,technical,medium,Technical Support Team
+CASE-0280,The order portal shows a different delivery date than the dealer told me.,ordering,low,Order Management Team
+CASE-0281,The infotainment screen flickers and randomly reboots while driving.,technical,high,Technical Support Team
+CASE-0282,Can I get media assets and logos for an editorial article?,other,low,General Correspondence / Triage Queue
+CASE-0283,I want to switch the exterior color before the car goes into production.,ordering,medium,Order Management Team
+CASE-0284,I was quoted one price for the repair but charged almost double at pickup.,service,high,Service Scheduling Team
+CASE-0285,Where can I find your nearest dealership to my zip code?,general,low,Customer Care Team
+CASE-0286,Is it possible to hold my delivery until after my vacation?,ordering,low,Order Management Team
+CASE-0287,My trade-in offer expired before my order was finalized.,ordering,medium,Order Management Team
+CASE-0288,The parking brake won't fully release after the last service.,service,high,Service Scheduling Team
+CASE-0289,The technician forgot to reset my service reminder after the last visit.,service,low,Service Scheduling Team
+CASE-0290,My AC stopped blowing cold air right before a long trip — can you fit me in today?,service,high,Service Scheduling Team
+CASE-0291,My backup camera shows a black screen when I reverse.,technical,high,Technical Support Team
+CASE-0292,The serpentine belt is squealing loudly on cold mornings.,service,medium,Service Scheduling Team
+CASE-0293,Where do I submit a general compliment about your brand?,general,low,Customer Care Team
+CASE-0294,The heater only blows cold air even after warming up.,service,medium,Service Scheduling Team
+CASE-0295,Can I share my saved configuration link with my partner?,configurator,low,Digital Product / Configurator Support
+CASE-0296,My order has been stuck at 'awaiting parts' with no explanation.,ordering,medium,Order Management Team
+CASE-0297,How do I transfer my order to a different dealership?,ordering,medium,Order Management Team
+CASE-0298,Can you send me an itemized copy of my latest invoice?,billing,low,Billing & Payments Team
+CASE-0299,Do you offer a pickup and drop-off service for routine maintenance?,service,low,Service Scheduling Team
+CASE-0300,The price shown in the configurator doesn't update when I change trims.,configurator,medium,Digital Product / Configurator Support

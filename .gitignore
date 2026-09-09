@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local vector store (rebuilt automatically on first run; keep out of git)
+.chroma/
+
+# Evaluation temp indexes are created under the OS temp directory, never
+# inside the repo -- this is a defensive pattern in case that ever changes.
+evaluation/.tmp_chroma*/
+
+# evaluation/results.json and evaluation/predictions.csv are intentionally
+# NOT ignored -- they are reproducibility evidence for the case study and
+# contain only the supplied synthetic case data, no secrets.
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
+
+# Personal interview/rehearsal prep -- kept locally for the presenter's own
+# use, deliberately excluded from the public submission. The actual
+# presentation deliverable (presentation/slides.html) is NOT affected.
+presentation/speaker_notes.md
+presentation/demo_script.md
+presentation/interview_qa.md

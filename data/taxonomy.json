@@ -1,0 +1,44 @@
+{
+  "categories": [
+    {
+      "name": "service",
+      "description": "Inquiries about vehicle maintenance, repairs, and the service-center experience: scheduling, rescheduling, or cancelling appointments and routine work such as oil changes, tire rotations, brakes, and mileage inspections. It also covers issues arising during or after a visit — unexpected diagnostic fees, unauthorized or incomplete work, or problems that recur — plus loaner cars, shuttles, and pickup/drop-off. Safety-critical symptoms like grinding brakes, overheating, or a car unsafe to drive belong here and usually warrant higher priority. In short, hands-on physical work on the vehicle, or follow-up on such work.",
+      "keywords": ["service appointment", "oil change", "brake", "maintenance", "repair", "loaner car", "dealership visit", "diagnostic fee", "tire rotation", "inspection", "warranty repair"]
+    },
+    {
+      "name": "configurator",
+      "description": "Inquiries about the online vehicle configurator and the digital build-your-car experience: building, saving, retrieving, comparing, or sharing configurations, and how trims, packages, colors, wheels, and options interact. It covers in-tool pricing behaviour — how totals update, how taxes/fees are estimated, and the financing or lease calculator step. A large share are UI or functional bugs: crashing, freezing, logging out, failing to export a PDF, rendering colors wrong, or losing a saved build, plus why options are greyed out. The defining trait is interacting with the configuration software itself, not placing a real order.",
+      "keywords": ["configurator", "configuration", "trim level", "options", "save configuration", "price update", "PDF export", "color preview", "financing calculator step", "invoice amount"]
+    },
+    {
+      "name": "ordering",
+      "description": "Inquiries about placing, tracking, modifying, or cancelling an actual vehicle order and the order lifecycle: order status, delivery timelines, VIN assignment, and updates when an order is stuck in production or awaiting parts. It includes changes to an existing order — trim, color, options, delivery address, dates, or transferring to another dealership — plus deposit handling, trade-in application, cancellations, and related refunds. Expedited shipping, delivery scheduling problems, and missed or falsely-marked-delivered cases also belong here. The key distinction from billing is that ordering is about the transaction and fulfillment of acquiring a specific vehicle.",
+      "keywords": ["order status", "deposit", "delivery date", "VIN", "cancel order", "trade-in", "order tracking", "expedited shipping", "trim upgrade after order"]
+    },
+    {
+      "name": "billing",
+      "description": "Inquiries about invoices, payments, charges, refunds, and financing or lease account management: disputes over incorrect, duplicate, or unexplained charges and subscription charges the customer doesn't recognize. It covers payment mechanics — updating methods, failed or duplicated auto-payments, payment plans, changing due dates, payoff quotes, and reconciling balances — plus refunds owed back to the customer, late fees, waivers, hardship deferrals, itemized invoices, receipts, and interest statements. The unifying theme is money movement on an account: what the customer was charged, paid, owes, or should be refunded — not the order or physical service itself.",
+      "keywords": ["invoice", "billing", "refund", "overcharged", "lease payment", "auto-payment", "payment plan", "financing", "subscription charge", "late fee", "financing calculator", "extended warranty payment"]
+    },
+    {
+      "name": "warranty",
+      "description": "Inquiries about warranty coverage, claims, and disputes over whether a repair or part is covered: how to file a claim, what standard or extended warranties include, coverage end dates and mileage limits, and whether specific components fall under warranty or are wear items. A major portion are disputes and escalations — claims rejected, denied for alleged missing records, or where the dealer wants upfront payment for work the customer believes is covered — plus extending or transferring warranties and repeat failures after a fix. Recall notices and recall-related repairs also belong here. The defining trait is asserting or questioning a contractual coverage entitlement.",
+      "keywords": ["warranty claim", "warranty coverage", "covered under warranty", "extended warranty", "warranty rejected", "escalate claim", "powertrain warranty", "recall", "software update", "diagnostic fee"]
+    },
+    {
+      "name": "technical",
+      "description": "Inquiries about vehicle software, infotainment, connectivity, sensors, and hardware behaviour not tied to a service visit: infotainment crashes, reboots, or black screens, and Bluetooth, CarPlay/Android Auto, Wi-Fi, USB, or wireless-charging issues. It includes OTA updates that fail, stall, or degrade the car, and driver-assistance or sensor faults — false alarms, blind-spot or lane-keep warnings, adaptive cruise or phantom braking, wrong sensor readings, or camera malfunctions. EV concerns like reduced range after an update or slow charging, and connected-app problems, are included. The distinction from service is software/electronics symptoms the customer reports or troubleshoots, often remotely.",
+      "keywords": ["software update", "infotainment", "bluetooth", "navigation", "battery range", "sensor", "app connectivity", "key fob", "OTA update", "charging speed", "recall"]
+    },
+    {
+      "name": "general",
+      "description": "General customer-care inquiries not tied to a specific transaction, vehicle, or technical fault: account management such as login, password resets, updating contact details, verifying, merging, or closing accounts. It includes communication preferences — subscribing or unsubscribing, SMS opt-in, and duplicate emails — and information requests like service hours, contact numbers, dealership locations, brochures, manuals, or the privacy policy. It also covers loyalty enrollment and points, referral programs, compliments about staff, and general brand or app feedback. The unifying trait is routine, low-stakes customer administration and information requests rather than an operational issue.",
+      "keywords": ["contact information", "customer service hours", "feedback", "account", "unsubscribe", "brochure", "loyalty program", "compliment"]
+    },
+    {
+      "name": "other",
+      "description": "Inquiries that do not fit any operational category above and are unrelated to owning, buying, servicing, or configuring a vehicle — a deliberate catch-all so off-topic or non-customer messages are not forced into an operational bucket. It typically covers media and press requests, sponsorship, partnership, and collaboration proposals, and careers or recruitment questions (jobs, internships, supplier or dealer onboarding). It also includes corporate matters such as investor relations, shareholder or annual reports, and sustainability, plus merchandise, factory tours, charity donations, or film-production usage. The defining trait is engaging at a corporate or institutional level, so these route to general correspondence or triage rather than an operational queue.",
+      "keywords": ["press credentials", "sponsorship", "job opening", "partnership", "investor relations", "merchandise", "factory tour", "corporate social responsibility"]
+    }
+  ]
+}

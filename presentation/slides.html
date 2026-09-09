@@ -1,0 +1,678 @@
+<title>Smart Inquiry Triage</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#F5F3EE;
+    --paper-raised:#FFFFFF;
+    --ink:#1B2027;
+    --ink-soft:#4A505B;
+    --line:#DCD8CE;
+    --steel:#3E6E91;
+    --steel-ink:#1E4258;
+    --steel-tint:#E4EEF3;
+    --amber:#B77F2C;
+    --amber-tint:#F5E9D6;
+    --green:#4C7A4A;
+    --green-tint:#E4EEE1;
+    --red:#A64438;
+    --red-tint:#F4E1DD;
+    --shadow: 0 1px 2px rgba(27,32,39,.06), 0 8px 24px rgba(27,32,39,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171C;
+      --paper-raised:#1C2027;
+      --ink:#EDEBE4;
+      --ink-soft:#A7ACB6;
+      --line:#333944;
+      --steel:#7FB0D1;
+      --steel-ink:#CFE6F4;
+      --steel-tint:#20313D;
+      --amber:#E0A855;
+      --amber-tint:#3A2E1A;
+      --green:#8FBB8A;
+      --green-tint:#22301F;
+      --red:#E2897C;
+      --red-tint:#3A2320;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14171C;
+    --paper-raised:#1C2027;
+    --ink:#EDEBE4;
+    --ink-soft:#A7ACB6;
+    --line:#333944;
+    --steel:#7FB0D1;
+    --steel-ink:#CFE6F4;
+    --steel-tint:#20313D;
+    --amber:#E0A855;
+    --amber-tint:#3A2E1A;
+    --green:#8FBB8A;
+    --green-tint:#22301F;
+    --red:#E2897C;
+    --red-tint:#3A2320;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Archivo', ui-sans-serif, system-ui, sans-serif;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--steel);
+    font-weight:600;
+  }
+
+  #deck{
+    height:100vh;
+    overflow-y:auto;
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
+  }
+  .slide{
+    position:relative;
+    height:100vh;
+    width:100%;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:5.5vh 7vw 8vh;
+    border-bottom:1px solid var(--line);
+  }
+  .slide-inner{ max-width:1180px; margin:0 auto; width:100%; }
+  .slide-kicker{
+    display:flex; align-items:center; gap:.6rem; margin-bottom:1.1rem;
+  }
+  .tick{
+    width:22px;height:3px;background:var(--steel);border-radius:2px;flex:none;
+  }
+  h2.slide-title{
+    font-size:clamp(1.5rem, 2.6vw, 2.15rem);
+    font-weight:700;
+    margin:0 0 1.6rem 0;
+    color:var(--ink);
+  }
+  p{ line-height:1.55; color:var(--ink-soft); }
+  .lede{ font-size:1.05rem; max-width:62ch; }
+
+  /* ---- nav chrome ---- */
+  #progress{
+    position:fixed; top:0; left:0; height:3px; background:var(--steel);
+    width:0%; z-index:50; transition:width .25s ease;
+  }
+  #navbar{
+    position:fixed; left:0; right:0; bottom:0; height:46px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 1.4rem; z-index:50;
+    background:linear-gradient(to top, var(--paper) 55%, transparent);
+    pointer-events:none;
+  }
+  #navbar > *{ pointer-events:auto; }
+  .navbtn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+    background:var(--paper-raised); color:var(--ink); cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow);
+    font-size:1rem;
+  }
+  .navbtn:hover{ border-color:var(--steel); color:var(--steel); }
+  .navbtn:focus-visible{ outline:2px solid var(--steel); outline-offset:2px; }
+  #navctr{ display:flex; align-items:center; gap:.6rem; }
+  #slidecount{
+    font-family:'IBM Plex Mono', monospace; font-size:.78rem; color:var(--ink-soft);
+    letter-spacing:.04em;
+  }
+
+  /* ---- reusable components ---- */
+  .grid{ display:grid; gap:1.1rem; }
+  .grid-2{ grid-template-columns:1fr 1fr; }
+  .grid-3{ grid-template-columns:repeat(3,1fr); }
+  .grid-4{ grid-template-columns:repeat(4,1fr); }
+
+  .card{
+    background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:10px; padding:1.15rem 1.3rem; box-shadow:var(--shadow);
+  }
+  .card h3{ margin:.1rem 0 .5rem; font-size:1rem; color:var(--ink); }
+  .card p{ margin:0; font-size:.92rem; }
+
+  .principle{
+    border-left:3px solid var(--steel);
+    padding:.15rem 0 .15rem 1rem;
+  }
+  .principle .num{
+    font-family:'IBM Plex Mono',monospace; color:var(--steel); font-size:.78rem; font-weight:600;
+  }
+  .principle p{ margin:.25rem 0 0; font-size:.94rem; color:var(--ink); }
+
+  .callout{
+    background:var(--steel-tint); border:1px solid var(--steel);
+    border-radius:10px; padding:1.1rem 1.3rem; margin-top:1.4rem;
+  }
+  .callout p{ color:var(--steel-ink); margin:0; font-size:1.02rem; font-weight:500; font-style:italic; }
+
+  .warn-callout{
+    background:var(--amber-tint); border:1px solid var(--amber);
+    border-radius:10px; padding:1.1rem 1.3rem;
+  }
+  .warn-callout p{ color:var(--ink); margin:0; font-weight:500; }
+
+  table{ border-collapse:collapse; width:100%; }
+  th,td{ text-align:left; padding:.55rem .8rem; border-bottom:1px solid var(--line); font-size:.92rem; }
+  th{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
+  td.num, th.num{ text-align:right; font-family:'IBM Plex Mono',monospace; }
+
+  .barrow{ display:flex; align-items:center; gap:.7rem; padding:.4rem 0; }
+  .barrow .label{ width:150px; flex:none; font-size:.85rem; color:var(--ink-soft); }
+  .barrow .track{ flex:1; height:10px; background:var(--line); border-radius:5px; overflow:hidden; }
+  .barrow .fill{ height:100%; border-radius:5px; background:var(--steel); }
+  .barrow .val{ width:64px; flex:none; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:.85rem; font-weight:600; }
+
+  .stat-tile{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.2rem; box-shadow:var(--shadow);
+  }
+  .stat-tile .stat-label{ font-size:.74rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.06em; font-family:'IBM Plex Mono',monospace;}
+  .stat-tile .stat-value{ font-family:'IBM Plex Mono',monospace; font-size:1.9rem; font-weight:600; color:var(--steel); margin-top:.15rem; }
+  .stat-tile .stat-sub{ font-size:.78rem; color:var(--ink-soft); margin-top:.2rem; }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.22rem .65rem; border-radius:999px; font-size:.76rem; font-weight:600;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .pill-low{ background:var(--green-tint); color:var(--green); }
+  .pill-med{ background:var(--amber-tint); color:var(--amber); }
+  .pill-high{ background:var(--red-tint); color:var(--red); }
+
+  ol.steps{ margin:0; padding-left:1.15rem; }
+  ol.steps li{ margin-bottom:.55rem; font-size:.95rem; color:var(--ink); }
+  ol.steps li b{ color:var(--steel-ink); }
+
+  .rule{ height:1px; background:var(--line); margin:1.3rem 0; }
+
+  .kv{ display:flex; justify-content:space-between; gap:1rem; padding:.4rem 0; border-bottom:1px dashed var(--line); font-size:.92rem; }
+  .kv:last-child{ border-bottom:none; }
+  .kv .k{ color:var(--ink-soft); }
+  .kv .v{ font-family:'IBM Plex Mono',monospace; font-weight:600; }
+
+  .title-slide{ align-items:center; text-align:center; }
+  .title-slide h1{ font-size:clamp(2.1rem,5vw,3.4rem); font-weight:800; margin:.4rem 0 .8rem; }
+  .title-slide .sub{ font-size:1.1rem; color:var(--ink-soft); max-width:56ch; margin:0 auto; }
+  .gauge-row{ display:flex; gap:6px; justify-content:center; margin-bottom:1.6rem; }
+  .gauge-row i{ width:4px; height:22px; background:var(--line); border-radius:2px; }
+  .gauge-row i:nth-child(4),.gauge-row i:nth-child(5),.gauge-row i:nth-child(6){ background:var(--steel); }
+
+  .closing{ align-items:center; text-align:center; }
+  .closing .qa{ font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(2.4rem,6vw,4rem); color:var(--steel); margin:1.6rem 0 0; }
+
+
+  @media (max-width: 860px){
+    .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
+    .barrow .label{ width:110px; font-size:.78rem; }
+  }
+</style>
+
+<div id="progress"></div>
+<div id="deck">
+
+  <!-- SLIDE 1 — TITLE -->
+  <section class="slide title-slide" id="s1">
+    <div class="slide-inner">
+      <div class="gauge-row" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="eyebrow" style="justify-content:center;display:flex;">Customer Journey Analytics &amp; Data Science</div>
+      <h1>AI-powered Smart Inquiry&nbsp;Triage Assistant</h1>
+      <p class="sub">Evidence-grounded automotive inquiry classification, routing and selective human escalation</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 — BUSINESS PROBLEM -->
+  <section class="slide" id="s2">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Business problem</span></div>
+      <h2 class="slide-title">Triage is manual today — and it doesn't scale</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Today</h3>
+          <p>Every inquiry is read by a person, who decides what it's about, how urgent it is, and who should handle it.</p>
+          <div class="rule"></div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+            <span class="pill pill-high">Slow</span>
+            <span class="pill pill-med">Inconsistent</span>
+            <span class="pill pill-high">Doesn't scale</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>What the system produces automatically</h3>
+          <ol class="steps">
+            <li><b>Category</b> — which team's domain this is</li>
+            <li><b>Priority</b> — how urgent</li>
+            <li><b>Routed queue</b> — where it goes</li>
+            <li><b>Resolution note</b> — a short grounded first draft</li>
+            <li><b>Confidence / escalation</b> — flag it for a human when unsure</li>
+          </ol>
+        </div>
+      </div>
+      <div class="callout">
+        <p>"Automate routine first-line triage while retaining human review where the evidence is weak."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 — DESIGN PRINCIPLES -->
+  <section class="slide" id="s3">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Design principles</span></div>
+      <h2 class="slide-title">Four rules that shaped every decision</h2>
+      <div class="grid grid-2">
+        <div class="principle"><span class="num">01</span><p>Canonical business taxonomy controls classification.</p></div>
+        <div class="principle"><span class="num">02</span><p>Historical handling evidence influences priority and confidence.</p></div>
+        <div class="principle"><span class="num">03</span><p>Deterministic rules stay deterministic — no model call where the data already answers exactly.</p></div>
+        <div class="principle"><span class="num">04</span><p>Uncertainty leads to human review, not hidden guessing.</p></div>
+      </div>
+      <div class="callout">
+        <p>Every automated decision is backed by either the organization's taxonomy or historical handling evidence; disagreement becomes uncertainty.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — ARCHITECTURE -->
+  <section class="slide" id="s4">
+    <div class="slide-inner" style="max-width:1000px;">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Architecture</span></div>
+      <h2 class="slide-title">One local prototype, one linear workflow</h2>
+      <svg viewBox="0 0 1000 510" role="img" aria-labelledby="architecture-title architecture-description"
+           style="display:block;width:100%;max-height:62vh;font-family:inherit;">
+        <title id="architecture-title">Smart inquiry triage architecture</title>
+        <desc id="architecture-description">Inquiry flows through classification, retrieval, priority,
+          routing, resolution generation, and confidence with escalation to a structured result.
+          The taxonomy supplies classification. Past cases are embedded with nomic-embed-text
+          into Chroma, which supplies retrieval. After the finalized structured result, optional
+          downstream automation through n8n can trigger internal notifications, separately
+          from the LangGraph reasoning workflow.</desc>
+        <defs>
+          <marker id="architecture-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--steel)"/>
+          </marker>
+          <marker id="automation-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--amber)"/>
+          </marker>
+        </defs>
+        <g fill="none" stroke="var(--steel)" stroke-width="2" marker-end="url(#architecture-arrow)">
+          <path d="M500 48 V65"/><path d="M500 103 V120"/>
+          <path d="M500 158 V175"/><path d="M500 213 V230"/>
+          <path d="M500 268 V285"/><path d="M500 323 V340"/>
+          <path d="M500 378 V395"/>
+          <path d="M280 84 H375"/>
+          <path d="M855 48 V65"/><path d="M855 103 V120"/>
+          <path d="M730 139 H625"/>
+        </g>
+        <g fill="var(--steel-tint)" stroke="var(--steel)" stroke-width="1.5">
+          <rect x="375" y="10" width="250" height="38" rx="19"/>
+          <rect x="375" y="65" width="250" height="38" rx="6"/>
+          <rect x="375" y="120" width="250" height="38" rx="6"/>
+          <rect x="375" y="175" width="250" height="38" rx="6"/>
+          <rect x="375" y="230" width="250" height="38" rx="6"/>
+          <rect x="375" y="285" width="250" height="38" rx="6"/>
+          <rect x="375" y="340" width="250" height="38" rx="6"/>
+          <rect x="375" y="395" width="250" height="38" rx="19"/>
+        </g>
+        <g fill="var(--paper-raised)" stroke="var(--line)" stroke-width="1.5">
+          <rect x="50" y="65" width="230" height="38" rx="6"/>
+          <rect x="730" y="10" width="250" height="38" rx="6"/>
+          <rect x="730" y="65" width="250" height="38" rx="6"/>
+          <rect x="730" y="120" width="250" height="38" rx="6"/>
+        </g>
+        <g fill="var(--ink)" font-size="17" text-anchor="middle" dominant-baseline="middle">
+          <text x="500" y="29">Inquiry</text>
+          <text x="500" y="84">Classify</text>
+          <text x="500" y="139">Retrieve Top-K</text>
+          <text x="500" y="194">Determine Priority</text>
+          <text x="500" y="249">Route</text>
+          <text x="500" y="304">Generate Resolution</text>
+          <text x="500" y="359">Confidence + Escalation</text>
+          <text x="500" y="414">Structured Result</text>
+          <text x="165" y="84">taxonomy.json</text>
+          <text x="855" y="29">past_cases.csv</text>
+          <text x="855" y="84" font-size="14">Embeddings (nomic-embed-text)</text>
+          <text x="855" y="139">Chroma index</text>
+        </g>
+        <g aria-label="Optional downstream automation, separate from LangGraph">
+          <rect x="710" y="345" width="280" height="155" rx="10"
+                fill="var(--amber-tint)" stroke="var(--amber)" stroke-dasharray="5 4"/>
+          <text x="850" y="370" fill="var(--ink)" font-size="15" text-anchor="middle">Optional downstream automation</text>
+          <path d="M625 414 H750" fill="none" stroke="var(--amber)" stroke-width="2"
+                stroke-dasharray="5 4" marker-end="url(#automation-arrow)"/>
+          <g fill="var(--paper-raised)" stroke="var(--amber)" stroke-width="1.5">
+            <rect x="750" y="395" width="200" height="38" rx="6"/>
+            <rect x="750" y="452" width="200" height="38" rx="6"/>
+          </g>
+          <path d="M850 433 V452" fill="none" stroke="var(--amber)" stroke-width="2"
+                marker-end="url(#automation-arrow)"/>
+          <g fill="var(--ink)" font-size="17" text-anchor="middle" dominant-baseline="middle">
+            <text x="850" y="414">n8n</text>
+            <text x="850" y="471">Internal notifications</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 — WHY LANGGRAPH -->
+  <section class="slide" id="s5">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Why LangGraph</span></div>
+      <h2 class="slide-title">Why LangGraph — and what it isn't doing here</h2>
+      <div class="grid grid-2">
+        <ol class="steps">
+          <li>Explicit ordered stages, not an implicit convention buried in a function</li>
+          <li>One shared, typed state object every node reads and writes</li>
+          <li>Deterministic and model-driven steps coexist cleanly</li>
+          <li>Intermediate state is inspectable and independently testable</li>
+          <li>The workflow can grow without turning into one giant function</li>
+        </ol>
+        <div class="warn-callout">
+          <p>The production graph is linear — one edge after another. Retry/fallback is control flow <i>inside</i> the classification node. Escalation is a decision computed in the final node. No conditional graph branches exist today.</p>
+        </div>
+      </div>
+      <div class="callout">
+        <p>LangGraph was appropriate because the case study specifies a multi-stage workflow whose intermediate decisions matter — not because every classifier needs a graph.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 — CLASSIFICATION + ROUTING -->
+  <section class="slide" id="s6">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Classification &amp; routing</span></div>
+      <h2 class="slide-title">Constrained classification, deterministic routing</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Classification</h3>
+          <ol class="steps">
+            <li>Complete taxonomy injected into the prompt</li>
+            <li>Pydantic / <span class="mono">Literal</span>-constrained output — only a valid category can come back</li>
+            <li><span class="mono">qwen2.5:1.5b-instruct</span></li>
+            <li>One retry on unusable structured output</li>
+            <li>Deterministic taxonomy fallback, which always forces escalation</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Routing</h3>
+          <p>The supplied historical data shows category → queue is <b>1:1</b>. Routing is a direct, data-derived lookup — no LLM call, no extra uncertainty.</p>
+          <div class="rule"></div>
+          <div class="kv"><span class="k">Routing accuracy</span><span class="v">241/300 = 80.33%</span></div>
+          <p style="font-size:.82rem;margin-top:.4rem;">Not an independent result — routing is a deterministic function of predicted category, so this number <i>is</i> category accuracy.</p>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top:1.1rem;">
+        <div class="stat-tile"><div class="stat-label">Category accuracy</div><div class="stat-value">80.33%</div><div class="stat-sub">241 / 300 held-out cases</div></div>
+        <div class="stat-tile"><div class="stat-label">First-attempt valid structured output</div><div class="stat-value">300 / 300</div><div class="stat-sub">Retry/fallback never triggered in evaluation</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 — RETRIEVAL + PRIORITY -->
+  <section class="slide" id="s7">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Retrieval &amp; priority</span></div>
+      <h2 class="slide-title">Priority comes from historical neighbors — this is the bottleneck</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Retrieval</h3>
+          <ul style="margin:.2rem 0 0;padding-left:1.1rem;font-size:.92rem;color:var(--ink);">
+            <li><span class="mono">nomic-embed-text</span> + Chroma, cosine similarity</li>
+            <li>Top-K configurable in the UI</li>
+            <li>K=5 default, chosen from evaluation</li>
+          </ul>
+          <div class="rule"></div>
+          <h3>Priority methods tested</h3>
+          <p>Majority vote <b>vs.</b> similarity-weighted vote — both required to use only the retrieved Top-K.</p>
+        </div>
+        <div class="card">
+          <h3>Held-out accuracy</h3>
+          <div class="barrow"><span class="label">Priority, K=3</span><div class="track"><div class="fill" style="width:54%;background:var(--steel);"></div></div><span class="val">54.0%</span></div>
+          <div class="barrow"><span class="label">Priority, K=5</span><div class="track"><div class="fill" style="width:55.7%;background:var(--steel);"></div></div><span class="val">55.7%</span></div>
+          <div class="barrow"><span class="label">Majority vs weighted</span><div class="track"><div class="fill" style="width:0%;"></div></div><span class="val">0 / 300</span></div>
+          <p style="font-size:.82rem;margin-top:.3rem;">Zero disagreements → majority vote retained; the extra weighting measured no benefit.</p>
+        </div>
+      </div>
+      <div class="warn-callout" style="margin-top:1.1rem;">
+        <p>Medium-priority cases are the weakest segment: K=5 accuracy is 41/100 = 41.0%.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 — CONFIDENCE + ESCALATION -->
+  <section class="slide" id="s8">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Confidence &amp; escalation</span></div>
+      <h2 class="slide-title">An evidence score, not a calibrated probability</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Retrieval strength</h3><p>Strongest single retrieved similarity.</p></div>
+        <div class="card"><h3>Category agreement</h3><p>Similarity-weighted share of neighbors matching the predicted category.</p></div>
+        <div class="card"><h3>Category margin</h3><p>Evidence gap between the predicted category and its strongest competitor.</p></div>
+      </div>
+      <p style="margin-top:1rem;">Final prototype confidence = <b>unweighted mean</b> of the three signals above.</p>
+      <div class="grid grid-2" style="margin-top:.6rem;">
+        <div class="warn-callout"><p>✕ "Probability that prediction is correct"</p></div>
+        <div class="callout"><p>✓ "Evidence score for selective escalation"</p></div>
+      </div>
+      <div class="rule"></div>
+      <div class="kv"><span class="k">Escalation rule</span><span class="v mono">classification_failed OR confidence &lt; threshold</span></div>
+      <div class="kv"><span class="k">Default threshold</span><span class="v mono">0.50 (configurable)</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 — LEAKAGE-SAFE EVALUATION -->
+  <section class="slide" id="s9">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Evaluation methodology</span></div>
+      <h2 class="slide-title">Leakage-safe, stratified, reproducible</h2>
+      <div class="grid grid-4">
+        <div class="stat-tile"><div class="stat-label">Cases</div><div class="stat-value">300</div></div>
+        <div class="stat-tile"><div class="stat-label">Folds</div><div class="stat-value">5</div><div class="stat-sub">stratified</div></div>
+        <div class="stat-tile"><div class="stat-label">Per fold</div><div class="stat-value">240/60</div><div class="stat-sub">train / held-out</div></div>
+        <div class="stat-tile"><div class="stat-label">Seed</div><div class="stat-value">42</div><div class="stat-sub">fixed</div></div>
+      </div>
+      <p style="margin-top:1.2rem;">K=3 and K=5 both evaluated. Resolution-note generation is excluded from quantitative scoring — no human quality labels exist to score it against.</p>
+      <div class="callout">
+        <p>I rebuilt the retrieval index inside each fold, so a held-out inquiry could never retrieve itself.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 — RESULTS -->
+  <section class="slide" id="s10">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Results</span></div>
+      <h2 class="slide-title">The measured numbers, without spin</h2>
+      <table>
+        <thead><tr><th>Metric</th><th class="num">Result</th></tr></thead>
+        <tbody>
+          <tr><td>Category accuracy</td><td class="num">80.33%</td></tr>
+          <tr><td>Routing accuracy</td><td class="num">80.33%</td></tr>
+          <tr><td>Priority accuracy, K=5</td><td class="num">55.67%</td></tr>
+          <tr><td>Priority accuracy — true = high</td><td class="num">51.85%</td></tr>
+          <tr><td>Priority accuracy — true = medium</td><td class="num">41.0%</td></tr>
+        </tbody>
+      </table>
+      <div class="grid grid-2" style="margin-top:1.2rem;">
+        <div class="stat-tile"><div class="stat-label">Coverage @ threshold 0.50</div><div class="stat-value">59.7%</div><div class="stat-sub">179 / 300 auto-triaged</div></div>
+        <div class="stat-tile"><div class="stat-label">Full-triage reliability</div><div class="stat-value">51.4%</div><div class="stat-sub">92 / 179 — category + priority + routing all correct</div></div>
+      </div>
+      <div class="warn-callout" style="margin-top:1.1rem;">
+        <p>The prototype demonstrates the triage workflow and uncertainty mechanics, but these results do not justify autonomous production deployment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 — WHAT THE EVALUATION TAUGHT US -->
+  <section class="slide" id="s11">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">What the evaluation taught us</span></div>
+      <h2 class="slide-title">Three findings that shaped the final design</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>1 — Classification &gt; priority</h3><p>80.33% vs. ~56%. Classification is the strong link; priority inference from neighbor voting is the weak one.</p></div>
+        <div class="card"><h3>2 — Weighting added nothing</h3><p>Similarity-weighted priority matched plain majority vote on all 300 held-out cases — added complexity, zero benefit.</p></div>
+        <div class="card"><h3>3 — Similarity alone is a poor confidence signal</h3><p>Composite evidence is more usable for selective escalation, but still not a calibrated probability.</p></div>
+      </div>
+      <div class="callout">
+        <p>Priority quality, not routing architecture, is the main bottleneck.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 — LIVE DEMO -->
+  <section class="slide" id="s12">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Live demo</span></div>
+      <h2 class="slide-title">Three cases: confident, mixed, escalated</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>1 — Confident</h3><p>"My brakes are making a grinding noise."<br>Strong agreement, high priority, deterministic routing.</p></div>
+        <div class="card"><h3>2 — Mixed evidence</h3><p>"I was charged twice for my payment."<br>Correct classification, but retrieved evidence disagrees — confidence reflects it.</p></div>
+        <div class="card"><h3>3 — Escalated</h3><p>"I am a journalist asking about your next vehicle launch"<br>Threshold raised deliberately — evidence falls short, so it goes to a human.</p></div>
+      </div>
+      <div class="warn-callout" style="margin-top:1.1rem;">
+        <p>Resolution-note wording from the lightweight local generator varies run to run — the numbers and routing shown here are stable, the exact sentence isn't.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 — LIMITATIONS + ROADMAP -->
+  <section class="slide" id="s13">
+    <div class="slide-inner">
+      <div class="slide-kicker"><span class="tick"></span><span class="eyebrow">Limitations &amp; roadmap</span></div>
+      <h2 class="slide-title">What this is — and what it would take to ship</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Limitations</h3>
+          <ul style="margin:.2rem 0 0;padding-left:1.1rem;font-size:.86rem;color:var(--ink-soft);line-height:1.7;">
+            <li>300 synthetic/curated cases</li>
+            <li>Priority signal weak, especially medium</li>
+            <li>One taxonomy, one chat model, one embedding model</li>
+            <li>Confidence not calibrated</li>
+            <li>Small local model can occasionally transfer details from a highly similar retrieved historical case into a generated response, despite grounding instructions</li>
+            <li>No real customer outcomes</li>
+            <li>Resolution quality lacks human production labels</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Roadmap</h3>
+          <p style="font-weight:600;color:var(--ink);margin-bottom:.3rem;">Data / ML</p>
+          <ul style="margin:0 0 .7rem;padding-left:1.1rem;font-size:.86rem;color:var(--ink-soft);line-height:1.6;">
+            <li>Collect reviewer corrections and real outcomes</li>
+            <li>Improve the priority signal</li>
+            <li>Calibrate confidence</li>
+            <li>Monitor category / data drift</li>
+          </ul>
+          <p style="font-weight:600;color:var(--ink);margin-bottom:.3rem;">Engineering</p>
+          <ul style="margin:0;padding-left:1.1rem;font-size:.86rem;color:var(--ink-soft);line-height:1.6;">
+            <li>API / service boundary</li>
+            <li>CRM / ticket integration</li>
+            <li>Observability</li>
+            <li>Human-feedback capture</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:.9rem;font-size:.82rem;">Optional downstream automation: finalized triage results can trigger internal notifications through n8n, while operational automation remains separate from the LangGraph reasoning workflow.</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 14 — SUMMARY / Q&A -->
+  <section class="slide closing" id="s14">
+    <div class="slide-inner">
+      <div class="slide-kicker" style="justify-content:center;"><span class="eyebrow">Summary</span></div>
+      <h2 class="slide-title">Four takeaways</h2>
+      <div class="grid grid-4" style="text-align:left;">
+        <div class="card"><p>Taxonomy-constrained classification</p></div>
+        <div class="card"><p>Evidence-grounded historical retrieval</p></div>
+        <div class="card"><p>Deterministic routing where business rules are deterministic</p></div>
+        <div class="card"><p>Measured uncertainty with human escalation</p></div>
+      </div>
+      <div class="callout" style="text-align:left;">
+        <p>Prototype complete; production deployment would require better priority evidence and confidence calibration on real operational data.</p>
+      </div>
+      <div class="qa">Q&amp;A</div>
+    </div>
+  </section>
+
+</div>
+
+<div id="navbar">
+  <button class="navbtn" id="prevBtn" aria-label="Previous slide">‹</button>
+  <div id="navctr"><span id="slidecount" class="mono">01 / 14</span></div>
+  <button class="navbtn" id="nextBtn" aria-label="Next slide">›</button>
+</div>
+
+<script>
+(function(){
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var countEl = document.getElementById('slidecount');
+  var progressEl = document.getElementById('progress');
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function currentIndex(){
+    var mid = deck.scrollTop + deck.clientHeight / 2;
+    for (var i = 0; i < slides.length; i++) {
+      var top = slides[i].offsetTop, bottom = top + slides[i].offsetHeight;
+      if (mid >= top && mid < bottom) return i;
+    }
+    return 0;
+  }
+
+  function updateChrome(){
+    var idx = currentIndex();
+    countEl.textContent = pad(idx + 1) + ' / ' + pad(total);
+    progressEl.style.width = (((idx + 1) / total) * 100) + '%';
+  }
+
+  function goTo(idx){
+    idx = Math.max(0, Math.min(total - 1, idx));
+    slides[idx].scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo(currentIndex() + 1); });
+  document.getElementById('prevBtn').addEventListener('click', function(){ goTo(currentIndex() - 1); });
+
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { goTo(currentIndex() + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { goTo(currentIndex() - 1); e.preventDefault(); }
+    if (e.key === 'Home') { goTo(0); e.preventDefault(); }
+    if (e.key === 'End') { goTo(total - 1); e.preventDefault(); }
+  });
+
+  deck.addEventListener('scroll', function(){
+    window.requestAnimationFrame(updateChrome);
+  }, {passive:true});
+
+  updateChrome();
+})();
+</script>

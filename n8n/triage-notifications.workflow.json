@@ -1,0 +1,123 @@
+{
+  "name": "Triage Notifications (downstream, optional)",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "triage-result",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "Triage Result Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "webhookId": "triage-result-webhook",
+      "position": [260, 300],
+      "notes": "Receives every newly finalized successful triage result (query, category, priority, routed_queue, confidence, escalated, resolution_notes) from the Streamlit app's optional TRIAGE_N8N_WEBHOOK_URL integration. This node makes zero AI decisions -- it only routes an already-finalized result to downstream business actions. IMPORTANT: n8n's Webhook node wraps the POST JSON body under a top-level 'body' key, so every downstream expression must read $json[\"body\"][\"...\"], not $json[\"...\"] directly -- verified against a real Streamlit/LangGraph-generated payload."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"body\"][\"escalated\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Escalated?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "notes": "Escalation takes precedence: an escalated case is routed here regardless of its priority, so an escalated+high-priority case triggers exactly one notification (this email), never two."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "",
+        "subject": "Human Review Required - Smart Inquiry Triage",
+        "message": "=A customer inquiry has been escalated for manual review.\n\nCustomer Inquiry: {{$json[\"body\"][\"query\"]}}\nPredicted Category: {{$json[\"body\"][\"category\"]}}\nPriority: {{$json[\"body\"][\"priority\"]}}\nAssigned Queue: {{$json[\"body\"][\"routed_queue\"]}}\nConfidence: {{$json[\"body\"][\"confidence\"]}}\n\nAI-generated handling note:\n{{$json[\"body\"][\"resolution_notes\"]}}\n\nHuman review required due to insufficient triage evidence or classification fallback. Please review the classification, routing, and suggested handling before taking action.",
+        "options": {}
+      },
+      "name": "Escalation Email (Gmail - configure manually)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [760, 180],
+      "notes": "MANUAL SETUP REQUIRED, not done in this repo: (1) set the 'sendTo' field to your recipient address, (2) attach Gmail OAuth2 credentials via the n8n UI's Credentials panel. This file contains no email address, account ID, token, client secret, or credential of any kind -- the node will show as needing credentials until you configure it manually."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"body\"][\"priority\"]}}",
+              "value2": "high"
+            }
+          ]
+        }
+      },
+      "name": "High Priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [760, 420],
+      "notes": "Only reached for non-escalated results (see 'Escalated?' false branch). Reads from $json[\"body\"][\"priority\"] -- the Webhook node wraps the POST payload under 'body'."
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "",
+        "subject": "Urgent High-Priority Inquiry - Smart Inquiry Triage",
+        "message": "=A high-priority customer inquiry has been auto-triaged and requires prompt operational attention.\n\nCustomer Inquiry: {{$json[\"body\"][\"query\"]}}\nPredicted Category: {{$json[\"body\"][\"category\"]}}\nPriority: {{$json[\"body\"][\"priority\"]}}\nAssigned Queue: {{$json[\"body\"][\"routed_queue\"]}}\nConfidence: {{$json[\"body\"][\"confidence\"]}}\n\nAI-generated handling note:\n{{$json[\"body\"][\"resolution_notes\"]}}\n\nThis item was not escalated for manual classification review, but it is marked high priority and should be handled promptly by the assigned operational queue.",
+        "options": {}
+      },
+      "name": "Urgent High-Priority Email (Gmail - configure manually)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1020, 340],
+      "notes": "MANUAL SETUP REQUIRED, not done in this repo: (1) set the 'sendTo' field to your recipient address, (2) attach Gmail OAuth2 credentials via the n8n UI's Credentials panel. This file contains no email address, account ID, token, client secret, or credential of any kind -- the node will show as needing credentials until you configure it manually."
+    },
+    {
+      "parameters": {},
+      "name": "No Action",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1020, 500],
+      "notes": "Not escalated and not high priority -- no downstream notification for this result."
+    }
+  ],
+  "connections": {
+    "Triage Result Webhook": {
+      "main": [
+        [
+          { "node": "Escalated?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Escalated?": {
+      "main": [
+        [
+          { "node": "Escalation Email (Gmail - configure manually)", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "High Priority?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "High Priority?": {
+      "main": [
+        [
+          { "node": "Urgent High-Priority Email (Gmail - configure manually)", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "No Action", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {}
+}

@@ -1,0 +1,27 @@
+# Core UI
+streamlit>=1.36
+
+# LLM / orchestration
+langchain-core>=0.2
+langgraph>=0.2
+langchain-ollama>=0.2
+ollama>=0.3
+pydantic>=2.0
+httpx>=0.27
+
+# Optional downstream notification (src/notifications.py) -- disabled unless
+# TRIAGE_N8N_WEBHOOK_URL is set; uses httpx above, no separate dependency.
+
+# Vector store
+chromadb>=0.5
+langchain-chroma>=0.2
+
+# Data
+pandas>=2.0
+
+# Testing
+pytest>=8.0
+
+# Evaluation only (offline leakage-safe cross-validation harness in
+# evaluation/evaluate.py) -- not a production pipeline dependency.
+scikit-learn>=1.4
